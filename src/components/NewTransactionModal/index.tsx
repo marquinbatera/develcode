@@ -38,7 +38,7 @@ interface IFormInputs {
 
 export function NewTransactionModal({isOpen, onRequestClose}: NewUsersModalProps) {
     
-    const { createUser, users, idUser } = useUsers();
+    const { createUser, updateUser, users, idUser } = useUsers();
 
     const {
         register,
@@ -63,12 +63,21 @@ export function NewTransactionModal({isOpen, onRequestClose}: NewUsersModalProps
         const { name }: any = selectedFile;
         const dt_nasc = new Intl.DateTimeFormat('pt-BR').format(new Date(dataNascimento));
 
-        await createUser({
-            codigo,
-            nome,
-            data_nascimento: dt_nasc,
-            image: name,
-        });
+        if(idUser < 1){
+            await createUser({
+                codigo,
+                nome,
+                data_nascimento: dt_nasc,
+                image: name,
+            });
+        }else{
+            await updateUser({
+                codigo,
+                nome,
+                data_nascimento: dt_nasc,
+                image: name,
+            });
+        }
 
         resetField('codigo');
         resetField('nome');

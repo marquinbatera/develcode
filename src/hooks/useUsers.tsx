@@ -1,4 +1,4 @@
-import { createContext, ReactNode, useContext, useEffect, useState } from 'react';
+import { createContext, ReactNode, SetStateAction, useContext, useEffect, useState } from 'react';
 import { api } from '../servers/api';
 
 interface userProps {
@@ -18,6 +18,7 @@ interface UsersProviderProps {
 interface UsersContextData {
     users: userProps[];
     createUser: (user: UserInput) => Promise<void>;
+    updateUser: (user: UserInput) => Promise<void>;
     setId: (idUser: number) => void;
     idUser: number;
 }
@@ -33,7 +34,6 @@ export function UserProvider({ children }: UsersProviderProps) {
     }, []);
 
     async function createUser(userInput: UserInput) {
-        console.log(userInput);
         const response = await api.post('/users', userInput);
         const { user } = response.data;
         
@@ -44,12 +44,31 @@ export function UserProvider({ children }: UsersProviderProps) {
         ])
     }
 
+    async function updateUser(userInput: UserInput) {
+        const {image, codigo, nome, data_nascimento } = userInput;
+
+        // const response = await api.put(`/users/${idUser}`, userInput);
+        // const { user } = response.data;
+        // console.log("response do PUT", user);
+        
+        setUsers((prevState) => {
+            prevState.map(user => {
+                if(user.id == idUser){
+                    return {...user, codigo, nome, data_nascimento, image}
+                }
+            })
+            return [...prevState];
+        });
+
+        console.log("update:", users);
+    }
+
     function setId(idUser: number) {
         setIdUser(idUser);
     }
 
     return (
-        <UsersContext.Provider value={{users, createUser, setId, idUser}}>
+        <UsersContext.Provider value={{users, createUser, setId, idUser, updateUser}}>
             {children}
         </UsersContext.Provider>
     );

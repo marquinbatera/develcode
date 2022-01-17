@@ -43,11 +43,15 @@ createServer({
       return schema.create('user', data);
     })
 
-    // this.put('/users', (schema, req) => {
-    //   let user = schema.find(1);
-
-    //   return user?.update(JSON.parse(req.requestBody));
+    // this.put('/users/:id', (schema: any, req) => {
+    //   console.log("req do mirage", req.requestBody);
+    //   let dados = schema.user.find(':id');
+      
+    //   return dados.update(JSON.parse(req.requestBody));
+    //   // return [];
     // })
+
+    this.passthrough();
 
   }
 })

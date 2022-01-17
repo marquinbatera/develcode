@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useUsers } from "../../hooks/useUsers";
+
 import logo from '../../assets/logo.svg';
 import { Container, Content } from './styles';
 
@@ -7,14 +8,19 @@ interface HeaderProps {
 }
 
 export function Header({ onOpenNewTransactionModal }: HeaderProps) {
+
+  const { setId } = useUsers();
   
-  
+  async function handleNewUser() {
+    await setId(0);
+    await onOpenNewTransactionModal();
+  }
 
   return (
     <Container>
       <Content>
         <img src={logo} alt="Develcode" />
-        <button type='button' onClick={onOpenNewTransactionModal}>Novo Usuário</button>
+        <button type='button' onClick={handleNewUser}>Novo Usuário</button>
         
       </Content>
     </Container>
